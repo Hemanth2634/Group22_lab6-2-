@@ -64,4 +64,49 @@ void main(void)
         //do nothing
     }
 }
+void Portf_interrupt_handler(void)
+{
+    i=0;
+    while((GPIO_PORTF_DATA_R & 0x01)==0){
+     i++;
+    }
+    if (GPIO_PORTF_MIS_R & 0x10)    //switch 1
+        {
+
+        }
+        else if (GPIO_PORTF_MIS_R & 0x01)    //switch 2
+        {
+            if (i >= 900000)
+            {
+                if (duty > 5)
+                {
+                    duty = duty - 5;
+                }
+                else
+                {
+                    duty = 5;
+                }
+            }
+            else if (i >= 0 && i <= 900000)
+            {
+                if (duty < 100 - 5)
+                {
+                    duty = duty + 5;
+                }
+                else
+                {
+                    duty = 100;
+                }
+            }
+        }
+        PWM1_3_CMPA_R = (160 * duty) / 100;
+
+    int j;
+
+    for(j = 0; j <1600*100/4; j++){}
+    GPIO_PORTF_ICR_R = 0x11;
+
+}
+
+
 
